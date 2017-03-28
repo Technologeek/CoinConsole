@@ -1,0 +1,26 @@
+{
+  "name": "cmcgod",
+  "version": "1.0.0",
+  "description": "Customize your very own coinmarketcap.com dashboard with your watched coins",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/designateddesigner/cmcgod.git"
+  },
+  "keywords": [
+    "cryptocurrency"
+  ],
+  "author": "Michael Warner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/designateddesigner/cmcgod/issues"
+  },
+  "homepage": "https://github.com/designateddesigner/cmcgod#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2"
+  }
+}
