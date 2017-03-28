@@ -4,11 +4,26 @@ html
     link(href="/assets/css/style.css" rel="stylesheet")
     link(href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:300,400" rel="stylesheet")
   body
-    div.header
-      h1 cmcgod
-  footer
-    h2 Donate
-    ul
-      for coin in ['BTC', 'ETH', 'MAID']
-        li.inline.no-dot= coin
-        
+    div.flex-wrapper
+      header#header
+        div.container-fluid
+          h1 cmcgod
+      main#main
+        div.container-fluid
+          div#filter
+            h2 Coin Selection
+          div#charts
+            aside
+              i charts will show up here
+      footer#footer
+        div.container-fluid
+          h2.no-margin Donate
+          ul.no-dot.no-margin
+            for coin in ['BTC', 'ETH', 'MAID']
+              li.inline= coin
+          h2.no-margin Github
+          p.no-margin Check us out on 
+            a(href="https://github.com/designateddesigner/cmcgodGithub") Github
+          aside.no-margin 
+            small Made with ❤ for cryptocurrency and open source projects
+      script(src="/assets/js/cmcgod.js")  

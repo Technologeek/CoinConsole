@@ -1,7 +1,72 @@
+/* Setup */
 body {
   font-family: 'Open Sans', sans-serif;
+  padding: 0;
+  margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Open Sans Condensed'
+}
+
+.inline {
+  display: inline-flex;
+  padding: 5px 0;
+}
+
+.no-dot {
+  list-style-type: none;
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.img-center {
+  margin: 0 auto;
+}
+
+.flex-wrapper {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+}
+
+.container-fluid {
+  padding: 0 2%;
+}
+
+/* Header */
+
+/* Main */
+#main {
+  background-color: #ddd;
+  flex: 1;
+}
+
+#filter {
+
+}
+
+#charts {
+  
+}
+
+/* Footer */
+#footer {
+  padding: 10px 0;
+
 }
