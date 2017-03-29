@@ -1,7 +1,9 @@
 var http = require("http"),
     express = require("express"),
     bodyparser = require("body-parser"),
+    path = require('path'),
 
+    cd = __dirname;
     port = 3002,
 
     app = express();
@@ -15,6 +17,16 @@ var options = {
     "cache-control": "no-cache"
   }
 };
+
+app.set('view engine', 'pug');
+app.set('views', cd + '/views');
+
+app.use( '/assets', express.static( cd + '/assets' ) );
+
+
+app.get('/', function(req, res){
+  res.render('index');
+});
 
 app.get('/get', function(req, res){
   var cmcreq = http.request(options, function (cmcres) {
@@ -33,4 +45,4 @@ app.get('/get', function(req, res){
   cmcreq.end();
 });
 
-app.listen(port);
+app.listen(port, console.log("started on port %s...", port));
