@@ -1,3 +1,4 @@
+doctype html
 html
   head
     title cmcgod :: customize coinmarketcap
@@ -10,8 +11,12 @@ html
           h1 cmcgod
       main#main
         div.container-fluid
+          h2 Coin Selection
+          div.btn.toggle-filter(onClick="toggleFilter();") Filter
+          div.btn(style="margin: 0 10px;") Toggle All
+          div.btn Toggle None
           div#filter
-            h2 Coin Selection
+          hr
           div#charts
             aside
               i charts will show up here
@@ -23,7 +28,7 @@ html
               li.inline= coin
           h2.no-margin Github
           p.no-margin Check us out on 
-            a(href="https://github.com/designateddesigner/cmcgodGithub") Github
+            a(href="https://github.com/mwarnerdotme/cmcgod") Github
           aside.no-margin 
             small Made with ❤ for cryptocurrency and open source projects
       script(src="/assets/js/cmcgod.js")  

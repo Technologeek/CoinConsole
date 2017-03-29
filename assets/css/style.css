@@ -3,6 +3,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   padding: 0;
   margin: 0;
+  color: #111;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -58,11 +59,47 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #filter {
+  display: none;
+}
+
+.btn {
+  background-color: white;
+  border: 1px solid #111;
+  width: auto;
+  padding: 3px 5px;
+  display: inline-block;
+}
+
+.btn:hover {
+  cursor: pointer;
+}
+
+.toggle-filter {
 
 }
 
 #charts {
-  
+
+}
+
+.chart-box {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 32%;
+  padding: .5%;
+}
+
+.chart-box-title {
+  font-size: 18px;
+}
+
+.chart-box-symbol {
+
+}
+
+.chart-box-title, .chart-box-chart, .chart-box-price-btc, .chart-box-price-usd {
+  width: 100%;
+  text-align: center;
 }
 
 /* Footer */
