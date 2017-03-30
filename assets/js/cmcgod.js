@@ -1,24 +1,25 @@
 let charts = document.getElementById('charts'),
     filter = document.getElementById('filter');
 
-var data,
-    toggled = false;
+var toggled = false;
 
-//on page load, get all of the coin tickers (with ajax)
-window.onload = refresh();
+//connect to the websocket server on page load
+var socket = io.connect('http://localhost:3004');
 
-function refresh(){
-  console.log("refreshing data...");
-  get('/get', function(coins){
-    filter.innerHTML = null;
-    for (coin in coins){
-      var name = coins[coin].name;
-      //console.log(coins[coin]);
-      filter.innerHTML = filter.innerHTML + createCheckbox(name);
-    }
-  });
-}
+//get coin list on page load
+window.onload = socket.emit('refresh');
 
+//refresh data every 5 seconds
+setInterval(function(){
+  socket.emit('refresh');
+} , 1 * 1000);
+
+//listen for refreshed data
+socket.on('refresh', function(data){
+  filter.innerHTML = data;
+});
+
+//toggle the filter list
 function toggleFilter(){
   if (toggled == false) {
     //show the filter
@@ -31,10 +32,7 @@ function toggleFilter(){
   }
 }
 
-//refresh every 10 seconds
-//setInterval(refresh(), 10000);
-
-//make those filter boxes
+//make a filter checkbox
 function createCheckbox(s){
   var labelHTML = "<label for=" + s + ">" + s + "</label>",
       checkboxHTML = '<input type="checkbox" name="' + s + '">',
@@ -42,30 +40,6 @@ function createCheckbox(s){
 
   return result;
 }
-
-//set up a GET function
-function get(url, callback){
-  if (! url) {
-    console.log('No url was passed in...');
-    return;
-  }
-
-  xhr = new XMLHttpRequest();
-
-  xhr.addEventListener("readystatechange", function () {
-    if (this.readyState === 4) {
-      data = JSON.parse(this.responseText);
-      console.log('Got the data...');
-      //console.log(this.responseText);
-      callback(data);
-    }
-  });
-
-  xhr.open("GET", url);
-  xhr.setRequestHeader("cache-control", "no-cache");
-  xhr.send();
-}
-
 
 //display each of these on the filter
 
