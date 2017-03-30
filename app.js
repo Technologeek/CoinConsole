@@ -21,15 +21,15 @@ var options = {
   }
 };
 
+var globalData;
+
 //listen for websocket connections
 websock.on('connection', function(socket){
-    var greetings = ['Greetings!', 'Bonjour!', 'Hello!', 'Guten tag!'];
     console.log("%s has connected to the server.", socket.id);
 
     socket.on('refresh', function(){
       console.log("Refreshing data for user %s", socket.id);
-      var rNum = Math.floor(Math.random() * 4)
-      socket.emit('refresh', greetings[rNum]);
+      socket.emit('refresh', globalData);
     });
 });
 
@@ -81,6 +81,7 @@ app.get('/', function(req, res){
 app.get('/get', function(req, res){
   cmcGET.then(function(data){
     if(data && data != 'undefined'){
+      globalData = data;
       res.send(data)
     } else {
       res.send('Something went wrong...')

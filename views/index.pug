@@ -4,22 +4,26 @@ html
     title cmcgod :: customize coinmarketcap
     link(href="/assets/css/style.css" rel="stylesheet")
     link(href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:700|Open+Sans:300,400" rel="stylesheet")
+    link(rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous")
   body
     div.flex-wrapper
       header#header
         div.container-fluid
           h1 cmcgod
       main#main
-        div.container-fluid
-          h2 Coin Selection
-          div.btn.toggle-filter(onClick="toggleFilter();") Filter
-          div.btn(style="margin: 0 10px;") Toggle All
-          div.btn Toggle None
+        div#filterbar
+          h2.no-margin(style="margin-top: 10px;") Coin Selection
+          //div
+            div.btn(style="margin: 0 10px 0 0;") Toggle All
+            div.btn Toggle None
           div#filter
-          hr
-          div#charts
-            aside
-              i charts will show up here
+        div.filterbar-toggle(onClick="toggleFilter();")
+          i.fa.fa-filter
+        div.container-fluid
+          div#information
+            h2.get-started.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
+            p Select which coins you want to display on this dashboard
+            
       footer#footer
         div.container-fluid
           h2.no-margin Donate
