@@ -21,34 +21,37 @@ var options = {
   }
 };
 
-var globalData;
+var globalData,
+    maxUserRefreshRate = 5; //number of seconds before a user can successfully refresh
 
 //listen for websocket connections
 websock.on('connection', function(socket){
     console.log("%s has connected to the server.", socket.id);
 
+    var lastRefresh = maxUserRefreshRate; //initiate the last refresh timer
+
+    var incrementTimer = setInterval(function() {
+      lastRefresh = lastRefresh + 1;
+      //console.log('It has been %s seconds since user %s has refreshed.', lastRefresh, socket.id);
+    }, 1 * 1000);
+
     socket.on('refresh', function(){
-      console.log("Refreshing data for user %s", socket.id);
-      socket.emit('refresh', globalData);
+      console.log('User %s wants to refresh their coin data.', socket.id);
+
+      if (lastRefresh >= maxUserRefreshRate) {
+        console.log("Refreshing data for user %s", socket.id);
+        socket.emit('refresh', globalData);
+      } else {
+        console.log("User %s was denied a refresh. They are trying to refresh data too fast.", socket.id);
+        socket.emit('refresh', 0);
+      }
+
+      lastRefresh = 0; //reset the timer
     });
 });
 
-//get coin data every minute - time will decrease at go-live
-/*setInterval(function() {
-  cmcGET.then(function(data){
-    if(data && data != 'undefined'){
-      res.send(data);
-    } else {
-      res.send('Something went wrong...');
-    }
-  }).catch(function(err){
-    console.log(err);
-    res.send('There was an error! ' + err);
-  });
-}, 60 * 1000);
-*/
-
 let cmcGET = new Promise(function(resolve, reject) {
+  console.log('New request to refresh the coinmarketcap data.');
   var request = http.request(options, function(response) {
     var chunks = [];
 
@@ -58,6 +61,7 @@ let cmcGET = new Promise(function(resolve, reject) {
 
     response.on("end", function() {
       var data = Buffer.concat(chunks);
+      console.log('Successfully refreshed the coinmarketcap data!');
       resolve(data.toString());
     });
   });
@@ -70,26 +74,30 @@ let cmcGET = new Promise(function(resolve, reject) {
   request.end();
 });
 
-/*    ROUTES    */
-//home page
-app.get('/', function(req, res){
-  //send the page
-  res.render('index');
-});
-
-//legacy -- will get deleted once websockets run properly
-app.get('/get', function(req, res){
+function getCoinData() {
   cmcGET.then(function(data){
     if(data && data != 'undefined'){
       globalData = data;
-      res.send(data)
-    } else {
-      res.send('Something went wrong...')
+      return data;
     }
   }).catch(function(err){
     console.log(err);
-    res.send('There was an error! ' + err);
+    return 'There was an error! ' + err;
   });
+}
+
+//Get coin data on server start
+//getCoinData();
+
+//Get coin data every minute - time will decrease at go-live
+var autoRefresh = setInterval(function(){
+  getCoinData();
+}, 15 * 1000);
+
+/*    ROUTES    */
+//home page
+app.get('/', function(req, res){
+  res.render('index');
 });
 
 //let's use a templating engine...

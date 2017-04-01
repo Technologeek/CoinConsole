@@ -3,28 +3,34 @@ let information = document.getElementById('information'),
     filter = document.getElementById('filter');
 
 //connect to the websocket server on page load
-var socket = io.connect('http://localhost:3004');
+var socket = io.connect('http://localhost:3004'),
+    dataRefreshRate = 5;
 
 //get coin list on page load
 window.onload = socket.emit('refresh');
 
-//refresh data every 5 seconds
+//request a data refresh every 5 seconds
 setInterval(function(){
   socket.emit('refresh');
-} , 5 * 1000);
+} , dataRefreshRate * 1000);
 
 //listen for refreshed data
 var init = false;
 
 socket.on('refresh', function(data){
-  var json = JSON.parse(data);
+  if (typeof data != 'string' || ! data instanceof String) {
+    console.log('Oops! It looks like you tried refreshing the coin data a little too fast.');
+  } else {
+    console.log("We got the coin data! Let's refresh it.")
+    var json = JSON.parse(data);
 
-  //set up the filter on the initial page load
-  if (init == false) {
-    init = true; //don't run the initialization again!
-    filter.innerHTML = ''; //clear any HTML in the filter div
-    createFilterList(json); //create the new list of coins for the filter
-    return;
+    //set up the filter on the initial page load
+    if (init == false) {
+      init = true; //don't run the initialization again!
+      filter.innerHTML = ''; //clear any HTML in the filter div
+      createFilterList(json); //create the new list of coins for the filter
+      return;
+    }
   }
 });
 
