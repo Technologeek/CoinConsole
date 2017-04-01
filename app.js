@@ -22,32 +22,21 @@ var options = {
 };
 
 var globalData,
-    maxUserRefreshRate = 5; //number of seconds before a user can successfully refresh
+    userRefreshRate = 5; //number of seconds before a user can successfully refresh
 
 //listen for websocket connections
 websock.on('connection', function(socket){
     console.log("%s has connected to the server.", socket.id);
 
-    var lastRefresh = maxUserRefreshRate; //initiate the last refresh timer
+    //send initial data
+    console.log('Refreshing data for %s...', socket.id);
+    socket.emit('refresh', globalData);
 
-    var incrementTimer = setInterval(function() {
-      lastRefresh = lastRefresh + 1;
-      //console.log('It has been %s seconds since user %s has refreshed.', lastRefresh, socket.id);
-    }, 1 * 1000);
-
-    socket.on('refresh', function(){
-      console.log('User %s wants to refresh their coin data.', socket.id);
-
-      if (lastRefresh >= maxUserRefreshRate) {
-        console.log("Refreshing data for user %s", socket.id);
-        socket.emit('refresh', globalData);
-      } else {
-        console.log("User %s was denied a refresh. They are trying to refresh data too fast.", socket.id);
-        socket.emit('refresh', 0);
-      }
-
-      lastRefresh = 0; //reset the timer
-    });
+    //refresh the data every 'userRefreshRate' seconds
+    var userRefreshTimer = setInterval(function() {
+      console.log('Refreshing data for %s...', socket.id);
+      socket.emit('refresh', globalData);
+    }, userRefreshRate * 1000);
 });
 
 let cmcGET = new Promise(function(resolve, reject) {

@@ -4,33 +4,20 @@ let information = document.getElementById('information'),
 
 //connect to the websocket server on page load
 var socket = io.connect('http://localhost:3004'),
-    dataRefreshRate = 5;
-
-//get coin list on page load
-window.onload = socket.emit('refresh');
-
-//request a data refresh every 5 seconds
-setInterval(function(){
-  socket.emit('refresh');
-} , dataRefreshRate * 1000);
+    globalData;
 
 //listen for refreshed data
 var init = false;
 
 socket.on('refresh', function(data){
-  if (typeof data != 'string' || ! data instanceof String) {
-    console.log('Oops! It looks like you tried refreshing the coin data a little too fast.');
-  } else {
-    console.log("We got the coin data! Let's refresh it.")
-    var json = JSON.parse(data);
+  globalData = JSON.parse(data);
 
-    //set up the filter on the initial page load
-    if (init == false) {
-      init = true; //don't run the initialization again!
-      filter.innerHTML = ''; //clear any HTML in the filter div
-      createFilterList(json); //create the new list of coins for the filter
-      return;
-    }
+  //set up the filter on the initial page load
+  if (init != true) {
+    init = true; //don't run the filter initialization again!
+    filter.innerHTML = ''; //clear any HTML in the filter div
+    createFilterList(globalData); //create the new list of coins for the filter
+    return;
   }
 });
 
@@ -47,6 +34,15 @@ function createFilterList(a){
   result.then(function(filterList){
     filter.innerHTML = filterList;
   });
+}
+
+//make a filter checkbox
+function createCheckbox(s){
+  var labelHTML = "<label for=" + s + ">" + s + "</label>",
+      checkboxHTML = '<input type="checkbox" onClick="toggleCoin(this)" name="' + s + '">',
+      result = '<div>' + checkboxHTML + labelHTML + '</div>';
+
+  return result;
 }
 
 //toggle the filter list
@@ -94,25 +90,37 @@ function updateInformation(a){
     resolve(html);
   });
 
+  //Put the results on the page
   result.then(function(informationList){
     information.innerHTML = informationList;
   });
 }
 
 function createInformation(s){
-  var titleHTML = "<h3>" + s + "</h3>",
-      result = titleHTML;
+  var info = new Promise(function(resolve, reject){
+    var coinInfo = findCoinInfo(s);
+    resolve(coinInfo);
+  });
 
-  return result;
+  info.then(function(coinInfo){
+    price = coinInfo.price,
+    titleHTML = "<h3>" + s + "</h3>",
+    priceHTML = "<p>Price: " + price + "</p>";
+    result = '<div class="' + s + '">' + titleHTML + priceHTML + "</div>";
+
+    return result;
+  });
 }
 
-//make a filter checkbox
-function createCheckbox(s){
-  var labelHTML = "<label for=" + s + ">" + s + "</label>",
-      checkboxHTML = '<input type="checkbox" onClick="toggleCoin(this)" name="' + s + '">',
-      result = '<div>' + checkboxHTML + labelHTML + '</div>';
-
-  return result;
+function findCoinInfo(coin) {
+  for (obj in globalData) {
+    if (globalData[obj].name == coin){
+      var coinInfo = globalData[obj];
+      return coinInfo;
+    } else {
+      console.log('Coin not found!');
+    }
+  }
 }
 
 //load all charts with the ticker information
