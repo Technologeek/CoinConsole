@@ -26,17 +26,24 @@ var globalData,
 
 //listen for websocket connections
 websock.on('connection', function(socket){
-    console.log("%s has connected to the server.", socket.id);
+  console.log("%s has connected to the server.", socket.id);
 
-    //send initial data
+  //send initial data
+  console.log('Sending initial coin data to %s...', socket.id);
+  socket.emit('refresh', globalData);
+
+  //refresh the data every 'userRefreshRate' seconds
+  var userRefreshTimer = setInterval(function() {
     console.log('Refreshing data for %s...', socket.id);
     socket.emit('refresh', globalData);
+  }, userRefreshRate * 1000);
 
-    //refresh the data every 'userRefreshRate' seconds
-    var userRefreshTimer = setInterval(function() {
-      console.log('Refreshing data for %s...', socket.id);
-      socket.emit('refresh', globalData);
-    }, userRefreshRate * 1000);
+  socket.on('disconnect', function () {
+    console.log("%s has disconnected.", socket.id);
+    //Destroy the refresh timer for this user
+    clearInterval(userRefreshTimer);
+    userRefreshTimer = null;
+  });
 });
 
 let cmcGET = new Promise(function(resolve, reject) {
