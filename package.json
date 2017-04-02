@@ -1,24 +1,26 @@
 {
-  "name": "cmcgod",
+  "name": "CoinConsole",
   "version": "1.0.0",
-  "description": "Customize a personalized coinmarketcap.com dashboard",
+  "description": "Customizable cryptocurrency dashboard",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mwarnerdotme/cmcgod.git"
+    "url": "git+https://github.com/mwarnerdotme/coinconsole.git"
   },
   "keywords": [
-    "cryptocurrency"
+    "cryptocurrency",
+    "bitcoin",
+    "dashboard"
   ],
   "author": "Michael Warner",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mwarnerdotme/cmcgod/issues"
+    "url": "https://github.com/mwarnerdotme/coinconsole/issues"
   },
-  "homepage": "https://github.com/mwarnerdotme/cmcgod#readme",
+  "homepage": "https://github.com/mwarnerdotme/coinconsole#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",

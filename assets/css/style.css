@@ -106,6 +106,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 2%;
     display: none;
     flex-flow: column nowrap;
+    flex-basis: 20%;
   }
 
   #filter {
@@ -127,16 +128,27 @@ h1, h2, h3, h4, h5, h6 {
 
 @media screen and (max-width: 768px) {
   #filterbar {
-    display: block !important
+    display: block !important;
+    height: 200px;
+    overflow-y: scroll;
   }
 }
 
-.toggle-filter {
-
+#information {
+  display: flex;
+  flex-flow: row wrap;
+  overflow-y: scroll;
 }
 
-#information {
+#information div {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 10px;
+}
 
+#information div h4 {
+  margin: 0;
 }
 
 .chart-box {

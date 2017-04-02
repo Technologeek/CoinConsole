@@ -1,38 +1,41 @@
 doctype html
 html
   head
-    title cmcgod :: customize coinmarketcap
+    title CoinConsole :: Customizable Cryptocurrency Dashboard 
     link(href="/assets/css/style.css" rel="stylesheet")
     link(href="/assets/css/font-awesome.min.css" rel="stylesheet")
   body
     div.flex-wrapper
       header#header
         div.container-fluid
-          h1 cmcgod
+          h1 CoinConsole
+          
       main#main
         div#filterbar
           h2.no-margin(style="margin-top: 10px;") Coin Selection
-          //div
+          div
             div.btn(style="margin: 0 10px 0 0;") Toggle All
             div.btn Toggle None
           div#filter
+            //Coin toggles get placed here
         div.filterbar-toggle(onClick="toggleFilter();")
           i.fa.fa-filter
         div.container-fluid
           div#information
             h2.get-started.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
-            p Select which coins you want to display on this dashboard
+            h3 Select which coins you want to display on this dashboard.
             
       footer#footer
         div.container-fluid
           h2.no-margin Donate
           ul.no-dot.no-margin
-            for coin in ['BTC', 'ETH', 'MAID']
-              li.inline= coin
+            for coin in [['BTC', '1H7XngDZeqJPmqtZcJysiSgRdU1LuFhMhZ'], ['ETH', '0x56dC5C7177b1693d77a5A3c5eCa4d1a3EB3ebbE1']]
+              li= coin[0] + ': '
+                span= coin[1]
           h2.no-margin Github
           p.no-margin Check us out on 
-            a(href="https://github.com/mwarnerdotme/cmcgod") Github
+            a(href="https://github.com/mwarnerdotme/coinconsole") Github
           aside.no-margin 
             small Made with ❤ for cryptocurrency and open source projects
       script(src="/assets/js/socket.io.min.js")
-      script(src="/assets/js/cmcgod.js")
+      script(src="/assets/js/coinconsole.js")
