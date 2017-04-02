@@ -38,7 +38,7 @@ function createFilterList(a){
 function createCheckbox(s){
   var labelHTML = "<label for=" + s + ">" + s + "</label>",
       checkboxHTML = '<input type="checkbox" onClick="toggleCoin(this)" name="' + s + '">',
-      result = '<div>' + checkboxHTML + labelHTML + '</div>';
+      result = '<li class="no-margin no-dot"><div>' + checkboxHTML + labelHTML + '</div></li>';
 
   return result;
 }
@@ -119,7 +119,7 @@ function createInformationList(a){
         titleHTML = "<h3>" + title + "</h3>",
         priceUsdHTML = "<h4>USD => " + priceUsd + "</h4>",
         priceBtcHTML = "<h4>BTC => " + priceBtc + "</h4>",
-        result = '<div class="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + "</div>";
+        result = '<li class=inline><div class="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + "</div></li>";
 
     resolve(result);
   });

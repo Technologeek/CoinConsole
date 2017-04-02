@@ -1,9 +1,15 @@
 doctype html
 html
   head
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(charset="UTF-8")
+    meta(name="description" content="A super handy dashboard that automatically refreshes only the cryptocurrency market data that you're interested in.")
+    meta(name="author" content="Michael Warner")
+
     title CoinConsole :: Customizable Cryptocurrency Dashboard 
     link(href="/assets/css/style.css" rel="stylesheet")
     link(href="/assets/css/font-awesome.min.css" rel="stylesheet")
+
   body
     div.flex-wrapper
       header#header
@@ -11,19 +17,20 @@ html
           h1 CoinConsole
           
       main#main
-        div#filterbar
-          h2.no-margin(style="margin-top: 10px;") Coin Selection
-          div
+        div#filterbar.container-fluid
+          h2.no-margin(style="margin-top: 10px;") Coin Filter
+          //div
             div.btn(style="margin: 0 10px 0 0;") Toggle All
             div.btn Toggle None
-          div#filter
+          ul#filter.no-margin.no-padding
             //Coin toggles get placed here
         div.filterbar-toggle(onClick="toggleFilter();")
           i.fa.fa-filter
-        div.container-fluid
-          div#information
-            h2.get-started.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
-            h3 Select which coins you want to display on this dashboard.
+        ul#information.no-margin.container-fluid
+          //Coin information gets placed here
+          div.get-started
+            h2.hidden-mobile.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
+            h3 Select which coins you want to display on your dashboard.
             
       footer#footer
         div.container-fluid
