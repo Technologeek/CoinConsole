@@ -49,30 +49,30 @@ websock.on('connection', function(socket){
   });
 });
 
-let cmcGET = new Promise(function(resolve, reject) {
-  console.log('New request to refresh the coinmarketcap data.');
-  var request = http.request(options, function(response) {
-    var chunks = [];
-
-    response.on("data", function(chunk) {
-      chunks.push(chunk);
-    });
-
-    response.on("end", function() {
-      var data = Buffer.concat(chunks);
-      resolve(data.toString());
-    });
-  });
-
-  request.on('error', (err) => {
-    console.log('ERROR CONTACTING THE API! %s', err);
-    reject(Error(err));
-  });
-
-  request.end();
-});
-
 function getCoinData() {
+  let cmcGET = new Promise(function(resolve, reject) {
+    console.log('New request to refresh the coinmarketcap data.');
+    var request = http.request(options, function(response) {
+      var chunks = [];
+
+      response.on("data", function(chunk) {
+        chunks.push(chunk);
+      });
+
+      response.on("end", function() {
+        var data = Buffer.concat(chunks);
+        resolve(data.toString());
+      });
+    });
+
+    request.on('error', (err) => {
+      console.log('ERROR CONTACTING THE API! %s', err);
+      reject(Error(err));
+    });
+
+    request.end();
+  });
+
   cmcGET.then(function(data){
     if(data && data != 'undefined'){
       console.log('Successfully refreshed the coinmarketcap data!');
@@ -86,7 +86,7 @@ function getCoinData() {
 }
 
 //Get coin data on server start
-//getCoinData();
+getCoinData();
 
 //Get coin data every minute - time will decrease at go-live
 var autoRefresh = setInterval(function(){
