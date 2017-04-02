@@ -6,19 +6,17 @@ let information = document.getElementById('information'),
 var socket = io.connect('http://localhost:3004'),
     globalData;
 
-//listen for refreshed data
-var init = false;
+//initiate the page
+socket.on('init', function(){
+  filter.innerHTML = ''; //clear any HTML in the filter div
+  createFilterList(globalData); //create the new list of coins for the filter
+});
 
+//listen for refreshed data
 socket.on('refresh', function(data){
   globalData = JSON.parse(data);
 
-  //set up the filter on the initial page load
-  if (init != true) {
-    init = true; //don't run the filter initialization again!
-    filter.innerHTML = ''; //clear any HTML in the filter div
-    createFilterList(globalData); //create the new list of coins for the filter
-    return;
-  }
+  updateInformation(displayList);
 });
 
 //set up a function to create the filter list
@@ -69,12 +67,12 @@ function toggleCoin(coin){
 
   if (coin.checked == true) {
     //update the array and rerender
-    console.log("Displaying information for %s...", name);
+    console.log("Adding information for %s to the dashboard...", name);
     displayList.push(name);
     updateInformation(displayList);
   } else {
     //update the array and rerender
-    console.log("Removing information for %s...", name);
+    console.log("Removing information for %s from the dashboard...", name);
     var index = displayList.indexOf(name);
     displayList.splice(index, 1);
     updateInformation(displayList);
@@ -83,44 +81,48 @@ function toggleCoin(coin){
 
 function updateInformation(a){
   let result = new Promise(function(resolve, reject){
-    var html = '';
+    var html = '',
+    asyncLoop = 0;
     for (coin in a) {
-      html = html + createInformation(a[coin]);
+      selectCoinInfo(a[coin]).then(function(coinInfo){
+        createInformationList(coinInfo).then(function(informationList){
+          asyncLoop += 1;
+          html = html + informationList;
+          if (asyncLoop == a.length) resolve(html);
+        });
+      });
     }
-    resolve(html);
   });
 
-  //Put the results on the page
   result.then(function(informationList){
     information.innerHTML = informationList;
   });
 }
 
-function createInformation(s){
-  var info = new Promise(function(resolve, reject){
-    var coinInfo = findCoinInfo(s);
-    resolve(coinInfo);
-  });
-
-  info.then(function(coinInfo){
-    price = coinInfo.price,
-    titleHTML = "<h3>" + s + "</h3>",
-    priceHTML = "<p>Price: " + price + "</p>";
-    result = '<div class="' + s + '">' + titleHTML + priceHTML + "</div>";
-
-    return result;
+function selectCoinInfo(coin) {
+  return new Promise(function(resolve, reject){
+    for (index in globalData) {
+      if (globalData[index].name === coin){
+        resolve(globalData[index]);
+        break;
+      }
+    }
   });
 }
 
-function findCoinInfo(coin) {
-  for (obj in globalData) {
-    if (globalData[obj].name == coin){
-      var coinInfo = globalData[obj];
-      return coinInfo;
-    } else {
-      console.log('Coin not found!');
-    }
-  }
+function createInformationList(a){
+  return new Promise(function(resolve, reject){
+    var title = a.symbol,
+        priceUsd = a.price_usd,
+        priceBtc = a.price_usd,
+
+        titleHTML = "<h3>" + title + "</h3>",
+        priceUsdHTML = "<h4>USD => " + priceUsd + "</h4>",
+        priceBtcHTML = "<h4>BTC => " + priceBtc + "</h4>",
+        result = '<div class="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + "</div>";
+
+    resolve(result);
+  });
 }
 
 //load all charts with the ticker information

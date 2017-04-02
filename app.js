@@ -32,6 +32,9 @@ websock.on('connection', function(socket){
   console.log('Sending initial coin data to %s...', socket.id);
   socket.emit('refresh', globalData);
 
+  //ping the client to initiate the page
+  socket.emit('init');
+
   //refresh the data every 'userRefreshRate' seconds
   var userRefreshTimer = setInterval(function() {
     console.log('Refreshing data for %s...', socket.id);
@@ -57,7 +60,6 @@ let cmcGET = new Promise(function(resolve, reject) {
 
     response.on("end", function() {
       var data = Buffer.concat(chunks);
-      console.log('Successfully refreshed the coinmarketcap data!');
       resolve(data.toString());
     });
   });
@@ -73,6 +75,7 @@ let cmcGET = new Promise(function(resolve, reject) {
 function getCoinData() {
   cmcGET.then(function(data){
     if(data && data != 'undefined'){
+      console.log('Successfully refreshed the coinmarketcap data!');
       globalData = data;
       return data;
     }
