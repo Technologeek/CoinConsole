@@ -113,19 +113,38 @@ function selectCoinInfo(coin) {
 function createInformationList(a){
   return new Promise(function(resolve, reject){
     var title = a.symbol,
-        priceUsd = a.price_usd,
-        priceBtc = a.price_usd,
+        priceUsd = parseFloat(a.price_usd).formatMoney(2, ".", ","),
+        priceBtc = parseFloat(a.price_btc).toFixed(8),
+        volume = parseFloat(a["24h_volume_usd"]).formatMoney(0, ".", ","),
+        marketCap = parseFloat(a.market_cap_usd).formatMoney(0, ".", ","),
+        oneHour = parseInt(a["percent_change_1h"]),
+        twentyFourHour = parseInt(a["percent_change_24h"]),
+        sevenDay = parseInt(a["percent_change_7d"]),
+        rank = parseInt(a.rank),
 
-        titleHTML = "<h3>" + title + "</h3>",
-        priceUsdHTML = "<h4>USD => " + priceUsd + "</h4>",
-        priceBtcHTML = "<h4>BTC => " + priceBtc + "</h4>",
-        result = '<li class=inline><div class="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + "</div></li>";
+        titleHTML = "<h3>" + title + '<small class="rank"> #' + rank + "</small>" + "</h3>",
+        priceUsdHTML = "<h4>USD: $" + priceUsd + "</h4>",
+        priceBtcHTML = "<h4>BTC: " + priceBtc + "</h4>",
+        volumeHTML = "<h4>Volume: $" + volume + "</h4>",
+        oneHourChangeHTML = "<div class='percent-changes no-padding'><h4 class='one-hour'>1H: " + oneHour + "%</h4>",
+        twentyFourHourChangeHTML = "<h4 class='twenty-four-hour' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>",
+        sevenDayChangeHTML = "<h4 class='seven-day'>7D: " + sevenDay + "%</h4></div>",
+        marketCapHTML = "<h4>Market Cap: $" + marketCap + "</h4>",
+        result = '<li class=inline><div id="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + volumeHTML + oneHourChangeHTML + twentyFourHourChangeHTML + sevenDayChangeHTML + marketCapHTML + "</div></li>";
 
     resolve(result);
   });
 }
 
-//load all charts with the ticker information
 
-//on filter toggle, update which charts are shown
-  //fade out the untoggled charts (css transition)
+
+Number.prototype.formatMoney = function(c, d, t){
+var n = this,
+    c = isNaN(c = Math.abs(c)) ? 2 : c,
+    d = d == undefined ? "." : d,
+    t = t == undefined ? "," : t,
+    s = n < 0 ? "-" : "",
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };

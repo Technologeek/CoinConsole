@@ -14,6 +14,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+h1, h2, h3, h4, h5, h6, p, span {
+  transition: .2s;
+  -webkit-transition: .2s;
+  -moz-transition: .2s;
+}
+
 .inline {
   display: inline-flex;
 }
@@ -122,6 +128,19 @@ h1, h2, h3, h4, h5, h6 {
 
 #information div h3, #information div h4 {
   margin: 0;
+}
+
+.percent-changes {
+  flex-flow: row nowrap !important;
+  padding: 0 !important;
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
 }
 
 @media screen and (min-width: 768px){
