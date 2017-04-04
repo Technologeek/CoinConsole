@@ -1,9 +1,11 @@
+"use strict";
+
 var http = require("http"),
     express = require("express"),
     bodyparser = require("body-parser"),
     path = require('path'),
 
-    cd = __dirname;
+    cd = __dirname,
     webport = 3002,
     socketport = 3004,
 
