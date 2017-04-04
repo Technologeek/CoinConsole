@@ -113,16 +113,22 @@ function selectCoinInfo(coin) {
 function createInformationList(a){
   return new Promise(function(resolve, reject){
     var title = a.symbol,
-        priceUsd = parseFloat(a.price_usd).formatMoney(2, ".", ","),
+        priceUsd = parseFloat(a.price_usd),
         priceBtc = parseFloat(a.price_btc).toFixed(8),
         volume = parseFloat(a["24h_volume_usd"]).formatMoney(0, ".", ","),
         marketCap = parseFloat(a.market_cap_usd).formatMoney(0, ".", ","),
         oneHour = parseInt(a["percent_change_1h"]),
         twentyFourHour = parseInt(a["percent_change_24h"]),
         sevenDay = parseInt(a["percent_change_7d"]),
-        rank = parseInt(a.rank),
+        rank = parseInt(a.rank);
 
-        titleHTML = "<h3>" + title + '<small class="rank"> #' + rank + "</small>" + "</h3>",
+    if (priceUsd > 1) {
+      priceUsd = priceUsd.formatMoney(2, ".", ",")
+    } else {
+      priceUsd = priceUsd.formatMoney(8, ".", ",")
+    }
+
+    var titleHTML = "<h3>" + title + '<small class="rank"> #' + rank + "</small>" + "</h3>",
         priceUsdHTML = "<h4>USD: $" + priceUsd + "</h4>",
         priceBtcHTML = "<h4>BTC: " + priceBtc + "</h4>",
         volumeHTML = "<h4>Volume: $" + volume + "</h4>",
