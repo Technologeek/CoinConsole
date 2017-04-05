@@ -14,35 +14,32 @@ html
     div.flex-wrapper
       header#header
         div.container-fluid
-          h1 CoinConsole
+          h1.name CoinConsole
           
       main#main
         div#filterbar.container-fluid
-          h2.no-margin(style="margin-top: 10px;") Coin Filter
-          //div
-            div.btn(style="margin: 0 10px 0 0;") Toggle All
-            div.btn Toggle None
+          h2.no-margin.filter-title Filter
+          div.toggle-buttons
+            div.btn.btn-orange.toggle-all(onclick="toggleAll();") Show All
+            div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Reset
+          div.search
+            //input.filter-search(type="text" placeholder="Search...")
+            //Add a dropdown from the search bar
           ul#filter.no-margin.no-padding
             //Coin toggles get placed here
         div.filterbar-toggle(onClick="toggleFilter();")
           i.fa.fa-filter
         ul#information.no-margin.container-fluid
           //Coin information gets placed here
-          div.get-started
-            h2.hidden-mobile.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
-            h3 Select which coins you want to display on your dashboard.
             
       footer#footer
         div.container-fluid
-          h2.no-margin Donate
-          ul.no-dot.no-margin
-            for coin in [['BTC', '1H7XngDZeqJPmqtZcJysiSgRdU1LuFhMhZ'], ['ETH', '0x56dC5C7177b1693d77a5A3c5eCa4d1a3EB3ebbE1']]
-              li= coin[0] + ': '
-                span= coin[1]
-          h2.no-margin Github
-          p.no-margin Check us out on 
-            a(href="https://github.com/mwarnerdotme/coinconsole") Github
+          a(href="https://github.com/mwarnerdotme/coinconsole")
+            i.fa.fa-github.fa-3x
           aside.no-margin 
             small Made with ❤ for cryptocurrency and open source projects
+          aside.no-margin
+            small 
+              strong BTC: 1H7XngDZeqJPmqtZcJysiSgRdU1LuFhMhZ
       script(src="/assets/js/socket.io.min.js")
       script(src="/assets/js/coinconsole.js")
