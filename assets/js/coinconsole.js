@@ -67,16 +67,28 @@ function toggleCoin(coin){
 
   if (coin.checked == true) {
     //update the array and rerender
-    console.log("Adding information for %s to the dashboard...", name);
     displayList.push(name);
     updateInformation(displayList);
   } else {
     //update the array and rerender
-    console.log("Removing information for %s from the dashboard...", name);
     var index = displayList.indexOf(name);
     displayList.splice(index, 1);
     updateInformation(displayList);
   }
+}
+
+function toggleAll(){
+  //check all checkboxes and update
+
+
+  updateInformation(displayList);
+}
+
+function toggleReset(){
+  //uncheck all checkboxes and update
+
+
+  updateInformation(displayList);
 }
 
 function updateInformation(a){
@@ -114,6 +126,7 @@ function createInformationList(a){
   return new Promise(function(resolve, reject){
     var title = a.symbol,
         priceUsd = parseFloat(a.price_usd),
+        priceUsd = ((priceUsd > 1) ? priceUsd.formatMoney(2, ".", ",") : priceUsd = priceUsd.formatMoney(8, ".", ",")),
         priceBtc = parseFloat(a.price_btc).toFixed(8),
         volume = parseFloat(a["24h_volume_usd"]).formatMoney(0, ".", ","),
         marketCap = parseFloat(a.market_cap_usd).formatMoney(0, ".", ","),
@@ -122,19 +135,17 @@ function createInformationList(a){
         sevenDay = parseInt(a["percent_change_7d"]),
         rank = parseInt(a.rank);
 
-    if (priceUsd > 1) {
-      priceUsd = priceUsd.formatMoney(2, ".", ",")
-    } else {
-      priceUsd = priceUsd.formatMoney(8, ".", ",")
-    }
+    var oneHourChangeHTML = ((oneHour < 0) ? "<div class='percent-changes no-padding'><h4 class='one-hour negative'>1H: " + oneHour + "%</h4>" : "<div class='percent-changes no-padding'><h4 class='one-hour positive'>1H: " + oneHour + "%</h4>");
+    var twentyFourHourChangeHTML = ((twentyFourHour < 0) ? "<h4 class='twenty-four-hour negative' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>" : "<h4 class='twenty-four-hour positive' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>");
+    var sevenDayChangeHTML = ((sevenDay < 0) ? "<h4 class='seven-day negative'>7D: " + sevenDay + "%</h4></div>" : "<h4 class='seven-day positive'>7D: " + sevenDay + "%</h4></div>");
+
+    //var twentyFourHourChangeHTML = "<h4 class='twenty-four-hour' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>";
+    //var sevenDayChangeHTML = "<h4 class='seven-day'>7D: " + sevenDay + "%</h4></div>";
 
     var titleHTML = "<h3>" + title + '<small class="rank"> #' + rank + "</small>" + "</h3>",
         priceUsdHTML = "<h4>USD: $" + priceUsd + "</h4>",
         priceBtcHTML = "<h4>BTC: " + priceBtc + "</h4>",
         volumeHTML = "<h4>Volume: $" + volume + "</h4>",
-        oneHourChangeHTML = "<div class='percent-changes no-padding'><h4 class='one-hour'>1H: " + oneHour + "%</h4>",
-        twentyFourHourChangeHTML = "<h4 class='twenty-four-hour' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>",
-        sevenDayChangeHTML = "<h4 class='seven-day'>7D: " + sevenDay + "%</h4></div>",
         marketCapHTML = "<h4>Market Cap: $" + marketCap + "</h4>",
         result = '<li class=inline><div id="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + volumeHTML + oneHourChangeHTML + twentyFourHourChangeHTML + sevenDayChangeHTML + marketCapHTML + "</div></li>";
 
