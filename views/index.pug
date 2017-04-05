@@ -14,14 +14,17 @@ html
     div.flex-wrapper
       header#header
         div.container-fluid
-          h1 CoinConsole
+          h1.name CoinConsole
           
       main#main
         div#filterbar.container-fluid
-          h2.no-margin(style="margin-top: 10px;") Coin Filter
-          //div
-            div.btn(style="margin: 0 10px 0 0;") Toggle All
-            div.btn Toggle None
+          h2.no-margin.filter-title Filter
+          div.toggle-buttons
+            div.btn.btn-orange.toggle-all(onclick="toggleAll();") Toggle All
+            div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Toggle None
+          div.search
+            input.filter-search(type="text" placeholder="Search...")
+            //Add a dropdown from the search bar
           ul#filter.no-margin.no-padding
             //Coin toggles get placed here
         div.filterbar-toggle(onClick="toggleFilter();")
