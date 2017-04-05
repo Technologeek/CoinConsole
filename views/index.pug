@@ -17,16 +17,17 @@ html
           h1.name CoinConsole
           
       main#main
-        div#filterbar.container-fluid
-          h2.no-margin.filter-title Filter
-          div.toggle-buttons
-            div.btn.btn-orange.toggle-all(onclick="toggleAll();") Show All
-            div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Reset
-          div.search
-            //input.filter-search(type="text" placeholder="Search...")
-            //Add a dropdown from the search bar
-          ul#filter.no-margin.no-padding
-            //Coin toggles get placed here
+        div#filterbar
+          div.container-fluid
+            div.search
+              input.filter-search(type="text" placeholder="Search..." onkeyup="filterSearch(this.value);")
+            div.toggle-buttons
+              div.btn.btn-orange.toggle-all(onclick="toggleAll();") Show All
+              div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Reset
+          hr.seperator(style="margin-bottom: 0;")
+          div.container-fluid  
+            ul#filter.no-margin.no-padding
+              //Coin toggles get placed here
         div.filterbar-toggle(onClick="toggleFilter();")
           i.fa.fa-filter
         ul#information.no-margin.container-fluid
