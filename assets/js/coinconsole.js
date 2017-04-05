@@ -10,7 +10,6 @@ var socket = io.connect('http://localhost:3004'),
 
 //initiate the page
 socket.on('init', function(){
-  filter.innerHTML = ''; //clear any HTML in the filter div
   createFilterList(globalData); //create the new list of coins for the filter
 });
 
@@ -23,24 +22,63 @@ socket.on('refresh', function(data){
 
 //set up a function to create the filter list
 function createFilterList(a){
+  filter.innerHTML = '';
+
   let result = new Promise(function(resolve, reject){
     var html = '';
     for (coin in a) {
-      html = html + createCheckbox(a[coin].name);
+      var coinName = a[coin].name;
+      html = html + createFilterItem(coinName);
     }
     resolve(html);
   });
 
   result.then(function(filterList){
     filter.innerHTML = filterList;
+
+    //check for active coins and style them
+  });
+}
+
+function activeCheck(s){
+  searchArray(displayList, s).then(function(result){
+    for (coin in globalData){
+
+    }
+  });
+}
+
+function filterSearch(term){
+  if (term == ''){
+    //reset the filter if the search term is empty
+    createFilterList(globalData);
+  } else {
+    //search the available coins for the term and rerender the filter
+    searchArray(globalData, term, "name").then(function(result){
+      createFilterList(result);
+    });
+  }
+}
+
+function searchArray(a, s, k){
+  return new Promise(function(resolve, reject){
+    if (k) {
+      //if an object key value is passed in
+      resolve(a.filter(function(element) {
+        return element[k].toString().toLowerCase().indexOf(s.toLowerCase()) > -1;
+      }));
+    } else {
+      //if we're searching through a simple array
+      resolve(a.filter(function(element) {
+        return element.toString().toLowerCase().indexOf(s.toLowerCase()) > -1;
+      }));
+    }
   });
 }
 
 //make a filter checkbox
-function createCheckbox(s){
-  var labelHTML = "<label for=" + s + ">" + s + "</label>",
-      checkboxHTML = '<input type="checkbox" onClick="toggleCoin(this)" name="' + s + '">',
-      result = '<li class="no-margin no-dot"><div>' + checkboxHTML + labelHTML + '</div></li>';
+function createFilterItem(s){
+  var result = '<li class="no-margin no-dot btn btn-blue" onClick="toggleCoin(this.innerHTML.toLowerCase())">' + s + '</li>';
 
   return result;
 }
@@ -64,35 +102,33 @@ function toggleFilter(){
 var displayList = [];
 
 function toggleCoin(coin){
-  var checked = coin.checked,
-      name = coin.name;
-
-  if (coin.checked == true) {
-    //update the array and rerender
-    displayList.push(name);
-    updateInformation(displayList);
-  } else {
-    //update the array and rerender
-    var index = displayList.indexOf(name);
-    displayList.splice(index, 1);
-    updateInformation(displayList);
-  }
+  //check if the coin is currently on the display
+  searchArray(displayList, coin).then(function(result){
+    if (result == false) {
+      //if it's not, add it and rerender
+      displayList.push(coin);
+      updateInformation(displayList);
+    } else {
+      //if it is, remove it and rerender
+      var index = displayList.indexOf(coin);
+      displayList.splice(index, 1);
+      updateInformation(displayList);
+    }
+  });
 }
 
 function toggleAll(){
-  //check all checkboxes -- add later
-  let result = new Promise(function(resolve, reject){
+  let populateList = new Promise(function(resolve, reject){
     displayList = [];
     for (coin in globalData){
       displayList.push(globalData[coin].name);
     }
     resolve();
   });
-  result.then(updateInformation(displayList));
+  populateList.then(updateInformation(displayList));
 }
 
 function toggleReset(){
-  //uncheck all checkboxes -- add later
   displayList = [];
   updateInformation(displayList);
 }
@@ -124,7 +160,7 @@ function updateInformation(a){
 function selectCoinInfo(coin) {
   return new Promise(function(resolve, reject){
     for (index in globalData) {
-      if (globalData[index].name === coin){
+      if (globalData[index].name.toLowerCase() === coin){
         resolve(globalData[index]);
         break;
       }
@@ -145,25 +181,23 @@ function createInformationList(a){
         sevenDay = parseInt(a["percent_change_7d"]),
         rank = parseInt(a.rank);
 
-    var oneHourChangeHTML = ((oneHour < 0) ? "<div class='percent-changes no-padding'><h4 class='one-hour negative'>1H: " + oneHour + "%</h4>" : "<div class='percent-changes no-padding'><h4 class='one-hour positive'>1H: " + oneHour + "%</h4>");
-    var twentyFourHourChangeHTML = ((twentyFourHour < 0) ? "<h4 class='twenty-four-hour negative' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>" : "<h4 class='twenty-four-hour positive' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>");
-    var sevenDayChangeHTML = ((sevenDay < 0) ? "<h4 class='seven-day negative'>7D: " + sevenDay + "%</h4></div>" : "<h4 class='seven-day positive'>7D: " + sevenDay + "%</h4></div>");
+    var oneHourChangeHTML = ((oneHour < 0) ? '<h4 class="no-margin one-hour negative">1H: ' + oneHour + "%</h4>" : '<h4 class="no-margin one-hour positive">1H: ' + oneHour + '%</h4>');
+    var twentyFourHourChangeHTML = ((twentyFourHour < 0) ? '<h4 class="no-margin twenty-four-hour negative" style="padding: 0 7px;">24H: ' + twentyFourHour + '%</h4>' : '<h4 class="no-margin twenty-four-hour positive" style="padding: 0 7px;">24H: ' + twentyFourHour + '%</h4>');
+    var sevenDayChangeHTML = ((sevenDay < 0) ? '<h4 class="no-margin seven-day negative">7D: ' + sevenDay + '%</h4></div>' : "<h4 class='no-margin seven-day positive'>7D: " + sevenDay + '%</h4>');
 
     //var twentyFourHourChangeHTML = "<h4 class='twenty-four-hour' style='padding: 0 7px;'>24H: " + twentyFourHour + "%</h4>";
     //var sevenDayChangeHTML = "<h4 class='seven-day'>7D: " + sevenDay + "%</h4></div>";
 
-    var titleHTML = "<h3>" + title + '<small class="rank"> #' + rank + "</small>" + "</h3>",
-        priceUsdHTML = "<h4>USD: $" + priceUsd + "</h4>",
-        priceBtcHTML = "<h4>BTC: " + priceBtc + "</h4>",
-        volumeHTML = "<h4>Volume: $" + volume + "</h4>",
-        marketCapHTML = "<h4>Market Cap: $" + marketCap + "</h4>",
-        result = '<li class=inline><div id="' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + volumeHTML + oneHourChangeHTML + twentyFourHourChangeHTML + sevenDayChangeHTML + marketCapHTML + "</div></li>";
+    var titleHTML = '<h3 class="no-margin">' + title + '<small class="rank"> #' + rank + '</small>' + '</h3>',
+        priceUsdHTML = '<h4 class="no-margin">USD: $' + priceUsd + '</h4>',
+        priceBtcHTML = '<h4 class="no-margin">BTC: ' + priceBtc + '</h4>',
+        volumeHTML = '<h4 class="no-margin">Volume: $' + volume + '</h4>',
+        marketCapHTML = '<h4 class="no-margin">Market Cap: $' + marketCap + '</h4>',
+        result = '<li class="inline information-item"><div id=' + title + '">' + titleHTML + priceUsdHTML + priceBtcHTML + volumeHTML + marketCapHTML + '<div class="percent-changes no-padding">' + oneHourChangeHTML + twentyFourHourChangeHTML + sevenDayChangeHTML + '</div>' + '</div></li>';
 
     resolve(result);
   });
 }
-
-
 
 Number.prototype.formatMoney = function(c, d, t){
 var n = this,
