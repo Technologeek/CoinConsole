@@ -1,6 +1,8 @@
 let information = document.getElementById('information'),
     filterbar = document.getElementById('filterbar');
-    filter = document.getElementById('filter');
+    filter = document.getElementById('filter'),
+
+    welcomeMessage = '<div class="get-started"><h2 class="hidden-mobile no-margin">Click on the filter icon to get started!</h2><h3>Select which coins you want to display on your dashboard.</h3></div>';
 
 //connect to the websocket server on page load
 var socket = io.connect('http://localhost:3004'),
@@ -78,37 +80,45 @@ function toggleCoin(coin){
 }
 
 function toggleAll(){
-  //check all checkboxes and update
-
-
-  updateInformation(displayList);
+  //check all checkboxes -- add later
+  let result = new Promise(function(resolve, reject){
+    displayList = [];
+    for (coin in globalData){
+      displayList.push(globalData[coin].name);
+    }
+    resolve();
+  });
+  result.then(updateInformation(displayList));
 }
 
 function toggleReset(){
-  //uncheck all checkboxes and update
-
-
+  //uncheck all checkboxes -- add later
+  displayList = [];
   updateInformation(displayList);
 }
 
 function updateInformation(a){
-  let result = new Promise(function(resolve, reject){
-    var html = '',
-    asyncLoop = 0;
-    for (coin in a) {
-      selectCoinInfo(a[coin]).then(function(coinInfo){
-        createInformationList(coinInfo).then(function(informationList){
-          asyncLoop += 1;
-          html = html + informationList;
-          if (asyncLoop == a.length) resolve(html);
+  if (a.length == 0){
+    information.innerHTML = welcomeMessage;
+  } else {
+    let result = new Promise(function(resolve, reject){
+      var html = '',
+      asyncLoop = 0;
+      for (coin in a) {
+        selectCoinInfo(a[coin]).then(function(coinInfo){
+          createInformationList(coinInfo).then(function(informationList){
+            asyncLoop += 1;
+            html = html + informationList;
+            if (asyncLoop == a.length) resolve(html);
+          });
         });
-      });
-    }
-  });
+      }
+    });
 
-  result.then(function(informationList){
-    information.innerHTML = informationList;
-  });
+    result.then(function(informationList){
+      information.innerHTML = informationList;
+    });
+  }
 }
 
 function selectCoinInfo(coin) {

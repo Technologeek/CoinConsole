@@ -20,8 +20,8 @@ html
         div#filterbar.container-fluid
           h2.no-margin.filter-title Filter
           div.toggle-buttons
-            div.btn.btn-orange.toggle-all(onclick="toggleAll();") Toggle All
-            div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Toggle None
+            div.btn.btn-orange.toggle-all(onclick="toggleAll();") Show All
+            div.btn.btn-orange.toggle-reset(onclick="toggleReset();") Reset
           div.search
             input.filter-search(type="text" placeholder="Search...")
             //Add a dropdown from the search bar
@@ -31,9 +31,6 @@ html
           i.fa.fa-filter
         ul#information.no-margin.container-fluid
           //Coin information gets placed here
-          div.get-started
-            h2.hidden-mobile.no-margin(style="margin-top: 10px;") Click on the filter icon to get started!
-            h3 Select which coins you want to display on your dashboard.
             
       footer#footer
         div.container-fluid
