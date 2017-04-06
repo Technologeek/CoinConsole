@@ -1,4 +1,4 @@
-let information = document.getElementById('information'),
+var information = document.getElementById('information'),
     filterbar = document.getElementById('filterbar');
     filter = document.getElementById('filter'),
 
