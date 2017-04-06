@@ -65,6 +65,7 @@ function createFilterList(a){
     filter.innerHTML = filterList;
 
     //check for active coins and style them
+    //this is a future issue
   });
 }
 
@@ -128,7 +129,7 @@ function toggleFilter(){
 
 //toggle coin data on and off
 if (QueryString.display) {
-  var displayList = QueryString.display.split(",");
+  var displayList = QueryString.display.toLowerCase().split(",");
 } else {
   var displayList = [];
 }
@@ -152,13 +153,14 @@ function toggleCoin(coin){
 function toggleAll(){
   var populateList = new Promise(function(resolve, reject){
     displayList = [];
-    for (coin in globalData){
+    for (var coin in globalData){
       displayList.push(globalData[coin].name);
     }
     resolve();
   });
   populateList.then(function(){
-    updateInformation(displayList)
+    console.log(displayList);
+    updateInformation(displayList);
   });
 }
 
@@ -170,7 +172,7 @@ function toggleReset(){
 function updateURL(a){
   if (a && a.length && a.length > 0) {
     //create the new string
-    var newParams = a.toString();
+    var newParams = a.toString().toLowerCase();
     //put it up in the URL bar
     window.history.replaceState(newParams, newParams, "/#display=" + newParams);
   } else {
@@ -183,6 +185,7 @@ function updateInformation(a){
   updateURL(a);
 
   if (a.length == 0){
+    console.log("reverting back to original state");
     information.innerHTML = welcomeMessage;
   } else {
     var result = new Promise(function(resolve, reject){
