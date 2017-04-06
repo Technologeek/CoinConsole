@@ -1,14 +1,16 @@
 extends templates/page
 
 block content
-  img(src="/assets/img/logo_main.png" class="branding")
+  div.branding
+    img(src="/assets/img/logo_main.png" style="width: 100%" onclick="shareLink()")
+  div.share
   main#main
     div#filterbar
       div.container-fluid
         div.search
-          input.filter-search(type="text" placeholder="Search..." onkeyup="filterSearch(this.value);")
+          input.filter-search(type="text" placeholder="Search a coin name..." onkeyup="filterSearch(this.value);")
         div.toggle-buttons
-          div.btn.btn-yellow.toggle-all(onclick="toggleAll();") Show All
+          div.btn.btn-yellow.toggle-all(onclick="toggleTop();") Top 200
           div.btn.btn-yellow.toggle-reset(onclick="toggleReset();") Reset
       hr.seperator(style="margin-bottom: 0;")
       div.container-fluid  

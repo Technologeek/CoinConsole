@@ -32,9 +32,9 @@ a:hover {
 
 .branding {
   width: 75px;
+  bottom: 15px;
+  right: 4%;
   position: absolute;
-  bottom: 120px;
-  right: 10px;
   z-index: 200;
 }
 
@@ -87,7 +87,7 @@ a:hover {
   transition: .2s;
   -webkit-transition: .2s;
   -moz-transition: .2s;
-  min-width: 75px;
+  min-width: 60px;
   text-align: center;
   vertical-align: middle;
   padding: 8px 10px;
@@ -204,7 +204,6 @@ header {
   font-weight: bold;
 }
 
-
 .filter-search {
   background-color: #1565c0;
   color: white !important;
@@ -214,7 +213,7 @@ header {
   padding-right: 0px;
   margin: 10px 0;
   border-radius: 20px;
-  width: 95%;
+  width: 94%;
   transition: .2s;
   -webkit-transition: .2s;
   -moz-transition: .2s;
@@ -339,7 +338,7 @@ header {
   }
 
   .branding {
-    bottom: 10px;
+    display: none;
   }
 
   #header, #information {

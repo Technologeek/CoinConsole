@@ -55,7 +55,7 @@ function createFilterList(a){
   var result = new Promise(function(resolve, reject){
     var html = '';
     for (var coin in a) {
-      var coinName = a[coin].name;
+      var coinName = a[coin].symbol;
       html = html + createFilterItem(coinName);
     }
     resolve(html);
@@ -150,17 +150,21 @@ function toggleCoin(coin){
   });
 }
 
-function toggleAll(){
+function toggleTop(){
   var populateList = new Promise(function(resolve, reject){
-    displayList = [];
+    toggleReset();
     for (var coin in globalData){
-      displayList.push(globalData[coin].name);
+      if (coin >= 200){
+        resolve();
+      } else {
+        displayList.push(globalData[coin].symbol);
+      }
     }
-    resolve();
   });
+
   populateList.then(function(){
-    console.log(displayList);
     updateInformation(displayList);
+    window.location.search = window.location.search;
   });
 }
 
@@ -184,10 +188,7 @@ function updateURL(a){
 function updateInformation(a){
   updateURL(a);
 
-  if (a.length == 0){
-    console.log("reverting back to original state");
-    information.innerHTML = welcomeMessage;
-  } else {
+  if (a.length != 0){
     var result = new Promise(function(resolve, reject){
       var html = '',
       asyncLoop = 0;
@@ -205,13 +206,15 @@ function updateInformation(a){
     result.then(function(informationList){
       information.innerHTML = informationList;
     });
+  } else {
+    information.innerHTML = welcomeMessage;
   }
 }
 
 function selectCoinInfo(coin) {
   return new Promise(function(resolve, reject){
     for (var index in globalData) {
-      if (globalData[index].name.toLowerCase() === coin){
+      if (globalData[index].symbol.toLowerCase() === coin){
         resolve(globalData[index]);
         break;
       }
@@ -260,3 +263,8 @@ Number.prototype.formatMoney = function(c, d, t){
       j = (j = i.length) > 3 ? j % 3 : 0;
      return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
+
+function shareLink(){
+  //future button function to share a link to that specific coinconsole
+  //maybe some url shortening could be added to this function to make it... well... shorter
+}
