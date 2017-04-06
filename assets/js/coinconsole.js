@@ -1,3 +1,27 @@
+var QueryString = function() {
+ // This function is anonymous, is executed immediately and
+ // the return value is assigned to QueryString!
+ var query_string = {};
+ //window.location.search for "?x=y" url params -- this requires us to refresh the page when changed, though
+ var query = window.location.hash.substring(1);
+ var vars = query.split("&");
+ for (var i=0;i<vars.length;i++) {
+   var pair = vars[i].split("=");
+       // If first entry with this name
+   if (typeof query_string[pair[0]] === "undefined") {
+     query_string[pair[0]] = decodeURIComponent(pair[1]);
+       // If second entry with this name
+   } else if (typeof query_string[pair[0]] === "string") {
+     var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+     query_string[pair[0]] = arr;
+       // If third or later entry with this name
+   } else {
+     query_string[pair[0]].push(decodeURIComponent(pair[1]));
+   }
+ }
+ return query_string;
+}();
+
 var information = document.getElementById('information'),
     filterbar = document.getElementById('filterbar');
     filter = document.getElementById('filter'),
@@ -99,7 +123,11 @@ function toggleFilter(){
 }
 
 //toggle coin data on and off
-var displayList = [];
+if (QueryString.display) {
+  var displayList = QueryString.display.split(",");
+} else {
+  var displayList = [];
+}
 
 function toggleCoin(coin){
   //check if the coin is currently on the display
@@ -133,7 +161,21 @@ function toggleReset(){
   updateInformation(displayList);
 }
 
+function updateURL(a){
+  if (a && a.length && a.length > 0) {
+    //create the new string
+    newParams = a.toString();
+    //put it up in the URL bar
+    window.history.replaceState(newParams, newParams, "/#display=" + newParams);
+  } else {
+    //if there aren't any coins being displayed, the url should be set to root
+    window.history.replaceState("", "initial page", "/");
+  }
+}
+
 function updateInformation(a){
+  updateURL(a);
+
   if (a.length == 0){
     information.innerHTML = welcomeMessage;
   } else {
@@ -200,12 +242,12 @@ function createInformationList(a){
 }
 
 Number.prototype.formatMoney = function(c, d, t){
-var n = this,
-    c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
- };
+  var n = this,
+      c = isNaN(c = Math.abs(c)) ? 2 : c,
+      d = d == undefined ? "." : d,
+      t = t == undefined ? "," : t,
+      s = n < 0 ? "-" : "",
+      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+      j = (j = i.length) > 3 ? j % 3 : 0;
+     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
