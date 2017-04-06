@@ -357,7 +357,13 @@ header {
   }
 
   #main {
-    height: calc(100vh - 86px - 200px);
+    height: calc(100vh - 86px - 210px);
+  }
+
+  @media screen and (min--moz-device-pixel-ratio:0) {
+    #main {
+      height: calc(100vh - 86px - 216px);
+    }
   }
 
   #footer {
