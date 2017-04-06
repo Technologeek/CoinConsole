@@ -24,6 +24,8 @@ var QueryString = function() {
  return query_string;
 }();
 
+var websocketPort = 3004;
+
 var information = document.getElementById('information'),
     filterbar = document.getElementById('filterbar'),
     filter = document.getElementById('filter'),
@@ -31,7 +33,7 @@ var information = document.getElementById('information'),
     welcomeMessage = '<div class="get-started"><h2 class="hidden-mobile no-margin">Click on the filter icon to get started!</h2><h3>Select which coins you want to display on your dashboard.</h3></div>';
 
 //connect to the websocket server on page load
-var socket = io.connect('http://localhost:3004'),
+var socket = io.connect('//' + window.location.hostname + ':' + websocketPort),
     globalData;
 
 //initiate the page
