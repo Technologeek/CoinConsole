@@ -1,59 +1,20 @@
-doctype html
-html
-  head
-    meta(name="viewport" content="width=device-width, initial-scale=1")
-    meta(charset="UTF-8")
-    meta(name="description" content="A super handy dashboard that automatically refreshes only the cryptocurrency market data that you're interested in.")
-    meta(name="author" content="Michael Warner")
-    
-    meta(property="og:type" content="website")
-    meta(property="og:image" content="/assets/img/og.png")
-    meta(property="og:image:type" content="image/png")
-    meta(property="og:image:width" content="200")
-    meta(property="og:image:height" content="200")
+extends templates/page
 
-    title CoinConsole :: Customizable Cryptocurrency Dashboard 
-    link(href="/assets/css/style.css" rel="stylesheet")
-    link(href="/assets/css/font-awesome.min.css" rel="stylesheet")
-
-    link(rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon/apple-touch-icon.png")
-    link(rel="icon" type="image/png" href="/assets/img/favicon/favicon-32x32.png" sizes="32x32")
-    link(rel="icon" type="image/png" href="/assets/img/favicon/favicon-16x16.png" sizes="16x16")
-    link(rel="manifest" href="/assets/img/favicon/manifest.json")
-    link(rel="mask-icon" href="/assets/img/favicon/safari-pinned-tab.svg" color="#42a5f5")
-
-  body
-    div.flex-wrapper
-      img(src="/assets/img/logo_main.png" class="branding")
-      header#header
-        div.container-fluid
-          h1.name CoinConsole
-          
-      main#main
-        div#filterbar
-          div.container-fluid
-            div.search
-              input.filter-search(type="text" placeholder="Search..." onkeyup="filterSearch(this.value);")
-            div.toggle-buttons
-              div.btn.btn-yellow.toggle-all(onclick="toggleAll();") Show All
-              div.btn.btn-yellow.toggle-reset(onclick="toggleReset();") Reset
-          hr.seperator(style="margin-bottom: 0;")
-          div.container-fluid  
-            ul#filter.no-margin.no-padding
-              //Coin toggles get placed here
-        div.filterbar-toggle(onClick="toggleFilter();")
-          i.fa.fa-filter
-        ul#information.no-margin.container-fluid
-          //Coin information gets placed here
-            
-      footer#footer
-        div.container-fluid
-          a(href="https://github.com/mwarnerdotme/coinconsole")
-            i.fa.fa-github.fa-3x
-          aside.no-margin 
-            small Made with ❤ for cryptocurrency and open source projects
-          aside.no-margin
-            small 
-              strong BTC: 1H7XngDZeqJPmqtZcJysiSgRdU1LuFhMhZ
-      script(src="/assets/js/socket.io.min.js")
-      script(src="/assets/js/coinconsole.js")
+block content
+  img(src="/assets/img/logo_main.png" class="branding")
+  main#main
+    div#filterbar
+      div.container-fluid
+        div.search
+          input.filter-search(type="text" placeholder="Search..." onkeyup="filterSearch(this.value);")
+        div.toggle-buttons
+          div.btn.btn-yellow.toggle-all(onclick="toggleAll();") Show All
+          div.btn.btn-yellow.toggle-reset(onclick="toggleReset();") Reset
+      hr.seperator(style="margin-bottom: 0;")
+      div.container-fluid  
+        ul#filter.no-margin.no-padding
+          //Coin toggles get placed here
+    div.filterbar-toggle(onClick="toggleFilter();")
+      i.fa.fa-filter
+    ul#information.no-margin.container-fluid
+      //Coin information gets placed here
