@@ -30,6 +30,14 @@ a:hover {
   color: #555;
 }
 
+.branding {
+  width: 75px;
+  position: absolute;
+  bottom: 120px;
+  right: 10px;
+  z-index: 200;
+}
+
 .inline {
   display: inline-flex;
 }
@@ -83,7 +91,7 @@ a:hover {
   text-align: center;
   vertical-align: middle;
   padding: 8px 10px;
-  box-shadow: rgba(0, 0, 0, 0.156863) 0px 1px 10px, rgba(0, 0, 0, 0.227451) 0px 1px 10px;
+  box-shadow: rgba(0, 0, 0, 0.156863) 0px 2px 5px, rgba(0, 0, 0, 0.227451) 0px 2px 5px;
   text-shadow: 0px 0px 3px rgba(0,0,0,.3);
 }
 
@@ -95,13 +103,13 @@ a:hover {
   box-shadow: rgba(0, 0, 0, 0.156863) 0px 3px 10px, rgba(0, 0, 0, 0.227451) 0px 3px 10px;
 }
 
-.btn-orange {
-  background-color: #ff9800;
+.btn-yellow {
+  background-color: #ffb300;
   color: white;
 }
 
-.btn-orange:hover {
-  background-color: #ffa911;
+.btn-yellow:hover {
+  background-color: #ffc411;
   color: white;
 }
 
@@ -149,7 +157,7 @@ body::-webkit-scrollbar-thumb {
 
 /* Header */
 header {
-  background-color: #ff9800;
+  background-color: #ffb300;
   color: white;
   box-shadow: 0px 0px 10px 0px black;
   z-index: 100;
@@ -320,10 +328,6 @@ header {
     z-index: 50;
   }
 
-  .filter-search {
-    width: 100%;
-  }
-
   .information-item {
     width: calc(33% - 20px);
   }
@@ -332,6 +336,10 @@ header {
 @media screen and (max-width: 768px) {
   .hidden-mobile {
     display: none;
+  }
+
+  .branding {
+    bottom: 10px;
   }
 
   #header, #information {
@@ -370,5 +378,5 @@ header {
 }
 
 #footer a:hover {
-  color: #ff9800;
+  color: #ffb300;
 }
