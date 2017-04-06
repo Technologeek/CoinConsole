@@ -153,7 +153,9 @@ function toggleAll(){
     }
     resolve();
   });
-  populateList.then(updateInformation(displayList));
+  populateList.then(function(){
+    updateInformation(displayList)
+  });
 }
 
 function toggleReset(){

@@ -93,10 +93,15 @@ a:hover {
   padding: 8px 10px;
   box-shadow: rgba(0, 0, 0, 0.156863) 0px 2px 5px, rgba(0, 0, 0, 0.227451) 0px 2px 5px;
   text-shadow: 0px 0px 3px rgba(0,0,0,.3);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .btn:hover {
-  cursor: pointer;
   background-color: #e64a19;
   color: #555;
   border-color: #555;
@@ -142,19 +147,6 @@ a:hover {
   border-color: rgba(0, 0, 0, 0.3);
 }
 
-body::-webkit-scrollbar {
-    width: 1em;
-}
-
-body::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: darkgrey;
-  outline: 1px solid slategrey;
-}
-
 /* Header */
 header {
   background-color: #ffb300;
@@ -171,9 +163,16 @@ header {
 #main {
   background-color: white;
   color: #222;
-  flex: 1;
+  /*flex: 1 1 0%;*/
   height: calc(100vh - 86px - 112px);
   width: 100%;
+}
+
+/* Fix the #main height for firefox */
+@media screen and (min--moz-device-pixel-ratio:0) {
+  #main {
+    height: calc(100vh - 86px - 116px);
+  }
 }
 
 #filterbar {
@@ -245,6 +244,7 @@ header {
 
 .filterbar-toggle {
   display: none;
+  font-size: 26px;
 }
 
 .get-started {
@@ -261,7 +261,7 @@ header {
   overflow-y: scroll;
   width: 100%;
   height: 100%;
-  flex: 1;
+  flex: 1 1 0%;
 }
 
 #information div {
