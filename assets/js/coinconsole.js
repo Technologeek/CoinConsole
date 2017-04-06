@@ -1,11 +1,39 @@
-let information = document.getElementById('information'),
-    filterbar = document.getElementById('filterbar');
+"use strict";
+
+var QueryString = function() {
+ // This function is anonymous, is executed immediately and
+ // the return value is assigned to QueryString!
+ var query_string = {};
+ //window.location.search for "?x=y" url params -- this requires us to refresh the page when changed, though
+ var query = window.location.hash.substring(1);
+ var vars = query.split("&");
+ for (var i=0;i<vars.length;i++) {
+   var pair = vars[i].split("=");
+       // If first entry with this name
+   if (typeof query_string[pair[0]] === "undefined") {
+     query_string[pair[0]] = decodeURIComponent(pair[1]);
+       // If second entry with this name
+   } else if (typeof query_string[pair[0]] === "string") {
+     var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+     query_string[pair[0]] = arr;
+       // If third or later entry with this name
+   } else {
+     query_string[pair[0]].push(decodeURIComponent(pair[1]));
+   }
+ }
+ return query_string;
+}();
+
+var websocketPort = 3004;
+
+var information = document.getElementById('information'),
+    filterbar = document.getElementById('filterbar'),
     filter = document.getElementById('filter'),
 
     welcomeMessage = '<div class="get-started"><h2 class="hidden-mobile no-margin">Click on the filter icon to get started!</h2><h3>Select which coins you want to display on your dashboard.</h3></div>';
 
 //connect to the websocket server on page load
-var socket = io.connect('http://localhost:3004'),
+var socket = io.connect('//' + window.location.hostname + ':' + websocketPort),
     globalData;
 
 //initiate the page
@@ -24,10 +52,10 @@ socket.on('refresh', function(data){
 function createFilterList(a){
   filter.innerHTML = '';
 
-  let result = new Promise(function(resolve, reject){
+  var result = new Promise(function(resolve, reject){
     var html = '';
-    for (coin in a) {
-      var coinName = a[coin].name;
+    for (var coin in a) {
+      var coinName = a[coin].symbol;
       html = html + createFilterItem(coinName);
     }
     resolve(html);
@@ -37,6 +65,7 @@ function createFilterList(a){
     filter.innerHTML = filterList;
 
     //check for active coins and style them
+    //this is a future issue
   });
 }
 
@@ -99,7 +128,11 @@ function toggleFilter(){
 }
 
 //toggle coin data on and off
-var displayList = [];
+if (QueryString.display) {
+  var displayList = QueryString.display.toLowerCase().split(",");
+} else {
+  var displayList = [];
+}
 
 function toggleCoin(coin){
   //check if the coin is currently on the display
@@ -117,15 +150,22 @@ function toggleCoin(coin){
   });
 }
 
-function toggleAll(){
-  let populateList = new Promise(function(resolve, reject){
-    displayList = [];
-    for (coin in globalData){
-      displayList.push(globalData[coin].name);
+function toggleTop(){
+  var populateList = new Promise(function(resolve, reject){
+    toggleReset();
+    for (var coin in globalData){
+      if (coin >= 200){
+        resolve();
+      } else {
+        displayList.push(globalData[coin].symbol);
+      }
     }
-    resolve();
   });
-  populateList.then(updateInformation(displayList));
+
+  populateList.then(function(){
+    updateInformation(displayList);
+    window.location.search = window.location.search;
+  });
 }
 
 function toggleReset(){
@@ -133,14 +173,26 @@ function toggleReset(){
   updateInformation(displayList);
 }
 
-function updateInformation(a){
-  if (a.length == 0){
-    information.innerHTML = welcomeMessage;
+function updateURL(a){
+  if (a && a.length && a.length > 0) {
+    //create the new string
+    var newParams = a.toString().toLowerCase();
+    //put it up in the URL bar
+    window.history.replaceState(newParams, newParams, "/#display=" + newParams);
   } else {
-    let result = new Promise(function(resolve, reject){
+    //if there aren't any coins being displayed, the url should be set to root
+    window.history.replaceState("", "initial page", "/");
+  }
+}
+
+function updateInformation(a){
+  updateURL(a);
+
+  if (a.length != 0){
+    var result = new Promise(function(resolve, reject){
       var html = '',
       asyncLoop = 0;
-      for (coin in a) {
+      for (var coin in a) {
         selectCoinInfo(a[coin]).then(function(coinInfo){
           createInformationList(coinInfo).then(function(informationList){
             asyncLoop += 1;
@@ -154,13 +206,15 @@ function updateInformation(a){
     result.then(function(informationList){
       information.innerHTML = informationList;
     });
+  } else {
+    information.innerHTML = welcomeMessage;
   }
 }
 
 function selectCoinInfo(coin) {
   return new Promise(function(resolve, reject){
-    for (index in globalData) {
-      if (globalData[index].name.toLowerCase() === coin){
+    for (var index in globalData) {
+      if (globalData[index].symbol.toLowerCase() === coin){
         resolve(globalData[index]);
         break;
       }
@@ -200,12 +254,17 @@ function createInformationList(a){
 }
 
 Number.prototype.formatMoney = function(c, d, t){
-var n = this,
-    c = isNaN(c = Math.abs(c)) ? 2 : c,
-    d = d == undefined ? "." : d,
-    t = t == undefined ? "," : t,
-    s = n < 0 ? "-" : "",
-    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-    j = (j = i.length) > 3 ? j % 3 : 0;
-   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
- };
+  var n = this,
+      c = isNaN(c = Math.abs(c)) ? 2 : c,
+      d = d == undefined ? "." : d,
+      t = t == undefined ? "," : t,
+      s = n < 0 ? "-" : "",
+      i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+      j = (j = i.length) > 3 ? j % 3 : 0;
+     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+function shareLink(){
+  //future button function to share a link to that specific coinconsole
+  //maybe some url shortening could be added to this function to make it... well... shorter
+}
