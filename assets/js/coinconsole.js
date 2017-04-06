@@ -1,3 +1,5 @@
+"use strict";
+
 var QueryString = function() {
  // This function is anonymous, is executed immediately and
  // the return value is assigned to QueryString!
@@ -23,7 +25,7 @@ var QueryString = function() {
 }();
 
 var information = document.getElementById('information'),
-    filterbar = document.getElementById('filterbar');
+    filterbar = document.getElementById('filterbar'),
     filter = document.getElementById('filter'),
 
     welcomeMessage = '<div class="get-started"><h2 class="hidden-mobile no-margin">Click on the filter icon to get started!</h2><h3>Select which coins you want to display on your dashboard.</h3></div>';
@@ -48,9 +50,9 @@ socket.on('refresh', function(data){
 function createFilterList(a){
   filter.innerHTML = '';
 
-  let result = new Promise(function(resolve, reject){
+  var result = new Promise(function(resolve, reject){
     var html = '';
-    for (coin in a) {
+    for (var coin in a) {
       var coinName = a[coin].name;
       html = html + createFilterItem(coinName);
     }
@@ -146,7 +148,7 @@ function toggleCoin(coin){
 }
 
 function toggleAll(){
-  let populateList = new Promise(function(resolve, reject){
+  var populateList = new Promise(function(resolve, reject){
     displayList = [];
     for (coin in globalData){
       displayList.push(globalData[coin].name);
@@ -166,7 +168,7 @@ function toggleReset(){
 function updateURL(a){
   if (a && a.length && a.length > 0) {
     //create the new string
-    newParams = a.toString();
+    var newParams = a.toString();
     //put it up in the URL bar
     window.history.replaceState(newParams, newParams, "/#display=" + newParams);
   } else {
@@ -181,10 +183,10 @@ function updateInformation(a){
   if (a.length == 0){
     information.innerHTML = welcomeMessage;
   } else {
-    let result = new Promise(function(resolve, reject){
+    var result = new Promise(function(resolve, reject){
       var html = '',
       asyncLoop = 0;
-      for (coin in a) {
+      for (var coin in a) {
         selectCoinInfo(a[coin]).then(function(coinInfo){
           createInformationList(coinInfo).then(function(informationList){
             asyncLoop += 1;
@@ -203,7 +205,7 @@ function updateInformation(a){
 
 function selectCoinInfo(coin) {
   return new Promise(function(resolve, reject){
-    for (index in globalData) {
+    for (var index in globalData) {
       if (globalData[index].name.toLowerCase() === coin){
         resolve(globalData[index]);
         break;
